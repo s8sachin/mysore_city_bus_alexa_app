@@ -33,6 +33,26 @@ function(req,res)
     res.say(prompt).reprompt(prompt).shouldEndSession(false).send();
       console.log("response" + successMessage);
     });
-})
+});
+
+app.intent('AMAZON.HelpIntent',
+  function(req, res) {
+    var help = "";
+    res.say(help).shouldEndSession(false); // Or let the user stop an action (but remain in the skill)
+
+  });
+
+app.intent('AMAZON.StopIntent',
+  function(req, res) {
+    var goodbye = "Had a nice time talking to you. Goodbye.";
+    res.say(goodbye).shouldEndSession(true); // Or let the user stop an action (but remain in the skill)
+
+  });
+
+//hack to support custom utterances in utterance expansion string
+var utterancesMethod = app.utterances;
+app.utterances = function() {
+  return utterancesMethod().replace(/\{\-\|/g, '{');
+};
 
   module.exports = app;
